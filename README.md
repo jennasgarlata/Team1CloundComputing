@@ -38,6 +38,9 @@ You can install the required libraries using pip:
 
     pip install kafka-python Pillow tensorflow numpy
 
+    pip install Flask torch torchvision confluent-kafka pymongo
+
+
 Ensure the configuration within iot_camera.py points to the correct Kafka broker address (192.168.5.114:9092) for sending messages.
 
 ### VM 3: Database + ML Model Server
