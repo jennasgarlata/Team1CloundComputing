@@ -17,7 +17,29 @@ Starts Zookeeper:
 
 The Kafka broker accepts connections at 192.168.5.114:9092 when it is ran.
 ### VM 2: IoT Source
-Emulated IoT camera source generating and sending noisy images to Kafka broker.
+
+#### Code Overview
+
+The following code performs the following tasks:
+1. Loads images from the CIFAR-10 dataset.
+2. Adds Gaussian noise to these images.
+3. Encodes the images in base64 format and sends them to a Kafka topic named `iot_images` along with their labels.
+
+#### Prerequisites
+
+Make sure you have the following libraries installed:
+
+- `kafka-python`: For producing messages to Kafka.
+- `Pillow`: For image processing.
+- `tensorflow`: For loading the CIFAR-10 dataset.
+- `numpy`: For handling image arrays.
+
+You can install the required libraries using pip:
+
+pip install kafka-python Pillow tensorflow numpy
+
+Ensure the configuration within iot_camera.py points to the correct Kafka broker address (192.168.5.114:9092) for sending messages.
+
 ### VM 3: Database + ML Model Server
 MongoDB database for storing IoT data and inference results.
 
