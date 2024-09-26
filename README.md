@@ -47,6 +47,11 @@ Inference-Consumer: Fetches data from Kafka, sends the image to the ML model ser
 
 To run the consumers, establish the python source and execute each consumer in a different terminal:
 
+Prior to running for the first time, run the following commands using pip:
+
+    pip install pymongo
+    pip install kafka
+
 For the DB Consumer:
 
     source consumers/bin/activate
