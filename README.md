@@ -36,7 +36,10 @@ Make sure you have the following libraries installed:
 
 You can install the required libraries using pip:
 
+
+```bash
 pip install kafka-python Pillow tensorflow numpy
+
 
 Ensure the configuration within iot_camera.py points to the correct Kafka broker address (192.168.5.114:9092) for sending messages.
 
