@@ -6,6 +6,7 @@ import io
 from flask import Flask, request, jsonify
 from confluent_kafka import Producer
 import json
+import base64
 
 # Load a pretrained ResNet model
 model = models.resnet18(pretrained=True)
@@ -38,11 +39,14 @@ def process_image(image_bytes):
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image provided'}), 400
+    print(request.json)
+    json_data = request.json  # Access the JSON directly
+    image_data = json_data.get("Data")
+    
+    # Decode the base64 image
+    image_bytes = base64.b64decode(image_data)
 
-    image = request.files['image']
-    image_tensor = process_image(image.read())
+    image_tensor = process_image(image_bytes)
 
     with torch.no_grad():
         outputs = model(image_tensor)
@@ -50,7 +54,7 @@ def predict():
 
     # Prepare inference result
     result = {
-        'id': request.form['id'],  # DB entry ID
+        'id': json_data['ID'],  # DB entry ID
         'inferred_value': predicted_class.item()
     }
 
