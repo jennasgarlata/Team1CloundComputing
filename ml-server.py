@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify
 from confluent_kafka import Producer
 import json
 import base64
+from pymongo import MongoClient
 
 # Load a pretrained ResNet model
 model = models.resnet18(pretrained=True)
@@ -28,9 +29,21 @@ producer_config = {
 }
 producer = Producer(producer_config)
 
+# connect to mongoDb
+uri = "mongodb://192.168.5.110:27017/"
+user = "team1"
+pw = "team1"
+client = MongoClient(uri, connectTimeoutMS=60000, tls=False, directConnection=True, username=user, password=pw)
+database = client["admin"]
+collection = database["iot_data"]
+
 def send_inference_to_db(record):
-    producer.produce('inference-topic', key=str(record['id']), value=json.dumps(record))
-    producer.flush()
+    myquery = {"id": record['id']}
+    newvalues = { "$set": { "inference": record['inferred_value'] } }
+    print(record['id'])
+    print(record['inferred_value'])
+    collection.update_one(myquery, newvalues)
+
 
 def process_image(image_bytes):
     image = Image.open(io.BytesIO(image_bytes))
