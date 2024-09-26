@@ -4,19 +4,20 @@ import os
 import time
 import requests
 from kafka import KafkaConsumer
+import json
 
 #connect to kafka
-consumer = KafkaConsumer (bootstrap_servers="192.168.5.114:9092", auto_offset_reset='latest') # vm1
+consumer = KafkaConsumer (bootstrap_servers="192.168.5.114:9092", auto_offset_reset='latest', value_deserializer=lambda m: json.loads(m.decode('utf-8'))) # vm1
 consumer.subscribe (topics=["iot_images"])
 
-mlsURL = "192.168.5.110:port" #todo need this port number and possibly end point name
+mlsURL = "http://192.168.5.110:5000" #todo need this port number and possibly end point name
 
 try:
 
     for msg in consumer:
 
-        print (str(msg.value, 'ascii')) #debugging
-        req = requests.post(mlsURL, json = msg.value)
+        print (msg.value) #debugging
+        req = requests.post(mlsURL, msg.value)
         print(req.text)
         
 
